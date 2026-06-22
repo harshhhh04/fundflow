@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
+import '../models/expense.dart';
 
-class AddExpenseSheet extends StatelessWidget {
+class AddExpenseSheet extends StatefulWidget {
   const AddExpenseSheet({super.key});
+
+  @override
+  State<AddExpenseSheet> createState() => _AddExpenseSheetState();
+}
+
+class _AddExpenseSheetState extends State<AddExpenseSheet> {
+  final _amountController = TextEditingController();
+  final _categoryController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _categoryController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +35,40 @@ class AddExpenseSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const TextField(
-              decoration: InputDecoration(labelText: "Amount"),
+            TextField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: "Amount"),
             ),
             const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(labelText: "Category"),
+            TextField(
+              controller: _categoryController,
+              decoration: const InputDecoration(labelText: "Category"),
             ),
             const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(labelText: "Description"),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(labelText: "Description"),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 print("Expense Saved");
+                
+                final double? amount = double.tryParse(_amountController.text);
+                final String title = _categoryController.text.isNotEmpty 
+                    ? _categoryController.text 
+                    : (_descriptionController.text.isNotEmpty ? _descriptionController.text : "Unknown");
+                
+                if (amount != null) {
+                  final expense = Expense(
+                    title: title,
+                    amount: amount,
+                  );
+                  Navigator.pop(context, expense);
+                } else {
+                  Navigator.pop(context);
+                }
               },
               child: const Text("Save"),
             ),
