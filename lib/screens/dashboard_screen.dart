@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/info_card.dart';
+import '../widgets/add_expense_sheet.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -42,7 +43,14 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return const AddExpenseSheet();
+                  },
+                );
+              },
               child: const Text("Add Expense"),
             ),
           ],
